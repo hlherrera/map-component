@@ -16,11 +16,11 @@ var geo_data = (function () {
             "features": []
         };
         for (var i = 0; i < length; i++) {
-            var rand_x = Math.random();
-            var rand_y = Math.random();
+            var rand_x = 1.6 * Math.random();
+            var rand_y = 1.6 * Math.random();
             var dist = rand_x + rand_y;
-            x = x + rand_x / 100.0;
-            y = y + rand_y / 100.0;
+            x = x + rand_x;
+            y = y + rand_y;
             var date = new Date();
             date.setTime(initDate + i * dateDiff * 0.3 + dist * dateDiff * 0.7);
             var id = "id-" + i;

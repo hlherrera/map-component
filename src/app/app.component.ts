@@ -9,7 +9,8 @@ import { Component } from '@angular/core';
 export class AppComponent {
   	title = 'Module for mapping!';
     url = "app/geo";
-    
+    routing = true;
+
     onLayerEvents(layer) {
         //do some stuff here...
         console.log(layer);

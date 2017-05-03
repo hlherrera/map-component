@@ -13,11 +13,11 @@ export class geo_data {
             "features": []
         };
         for (let i = 0; i < length; i++) {
-            let rand_x = Math.random();
-            let rand_y = Math.random();
+            let rand_x = 1.6*Math.random();
+            let rand_y = 1.6*Math.random();
             let dist = rand_x + rand_y;
-            x = x + rand_x / 100.0;
-            y = y + rand_y / 100.0;
+            x = x + rand_x ; 
+            y = y + rand_y ;
             let date = new Date();
             date.setTime(initDate + i * dateDiff*0.3 + dist*dateDiff*0.7);
             let id = "id-" + i;

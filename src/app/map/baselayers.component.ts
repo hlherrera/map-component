@@ -1,20 +1,23 @@
 import {Component, EventEmitter, Output, Input} from '@angular/core';
-import {Script} from '../script.service';
+//import {Script} from '../script.service';
 import {GeoService} from './geo.service';
-import {LayersModel} from './layers.model';
-
-import * as L from 'leaflet';
-
+import 'leaflet-routing-machine'
+//import * as L from 'leaflet';
+declare var L:any;
 @Component({
     selector: 'base-layers-component',
     templateUrl: './baselayers.component.html',
-    providers: [GeoService, Script]
+    providers: [GeoService]
 })
 
 export class BaselayersComponent {
 
-    @Output('eventsReady') evtReady = new EventEmitter<L.GeoJSON>();
-    @Input('eventsURL') evtURL: string;
+    @Output('eventsReady')
+    evtReady = new EventEmitter<L.GeoJSON>();
+    @Input('eventsURL')
+    evtURL:string;
+    @Input('eventsRouting')
+    evtRouting:boolean;
     // Open Street Map and Open Cycle Map definitions
     LAYER_OCM = {
         id: 'opencyclemap',
@@ -36,17 +39,20 @@ export class BaselayersComponent {
     };
 
     // Form model object
-    layersControlOptions = { position: 'bottomright' };
+    layersControlOptions = {position: 'bottomright'};
     baseLayers = {
         'Open Street Map': this.LAYER_OSM.layer,
         'Open Cycle Map': this.LAYER_OCM.layer
     };
 
     options = {
-        zoom: 13
+        zoom: 5
     };
 
-    constructor(private geo:GeoService, script:Script) {
+    constructor(private geo:GeoService) {
+        L.Marker.prototype.options.icon['iconUrl'] = 'assets/marker-icon.png';
+        L.Marker.prototype.options.icon['shadowUrl'] = 'assets/marker-shadow.png';
+        L.Icon.Default.prototype.options['imagePath'] = 'assets/';
         //script.load('realtime').then(this.onReady).catch(error => console.log(error));
     }
 
@@ -78,13 +84,22 @@ export class BaselayersComponent {
                     }
                 }
             });
+            layer.addTo(map);
+
+            if(this.evtRouting) {
+                L.Routing.control({
+                    waypoints: geoJSONObject['features'].map(
+                        feature => L.latLng(feature['geometry']['coordinates'].reverse())
+                    )
+                }).addTo(map);
+            }
 
             const length = geoJSONObject['features'].length;
-            layer.addTo(map);
-            let mean = ( p1, p2 ) => [p1[0] + p2[0], p1[1] + p2[1]];
+            let mean = (p1, p2) => [p1[0] + p2[0], p1[1] + p2[1]];
             let center = geoJSONObject['features'].map(feature => feature['geometry']['coordinates'].reverse())
-                .reduce(mean).map(x => x/length);
+                .reduce(mean).map(x => x / length);
             map.setView(L.latLng(center), undefined, {reset: true} as any);
+
             me.evtReady.emit(layer);
         });
 

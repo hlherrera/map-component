@@ -6,11 +6,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 var core_1 = require('@angular/core');
-var script_service_1 = require('../script.service');
+//import {Script} from '../script.service';
 var geo_service_1 = require('./geo.service');
-var L = require('leaflet');
+require('leaflet-routing-machine');
 var BaselayersComponent = (function () {
-    function BaselayersComponent(geo, script) {
+    function BaselayersComponent(geo) {
         this.geo = geo;
         this.evtReady = new core_1.EventEmitter();
         // Open Street Map and Open Cycle Map definitions
@@ -39,11 +39,15 @@ var BaselayersComponent = (function () {
             'Open Cycle Map': this.LAYER_OCM.layer
         };
         this.options = {
-            zoom: 13
+            zoom: 5
         };
+        L.Marker.prototype.options.icon['iconUrl'] = 'assets/marker-icon.png';
+        L.Marker.prototype.options.icon['shadowUrl'] = 'assets/marker-shadow.png';
+        L.Icon.Default.prototype.options['imagePath'] = 'assets/';
         //script.load('realtime').then(this.onReady).catch(error => console.log(error));
     }
     BaselayersComponent.prototype.initMap = function (map) {
+        var _this = this;
         var me = this;
         var markerOptions = {
             radius: 8,
@@ -70,8 +74,13 @@ var BaselayersComponent = (function () {
                     }
                 }
             });
-            var length = geoJSONObject['features'].length;
             layer.addTo(map);
+            if (_this.evtRouting) {
+                L.Routing.control({
+                    waypoints: geoJSONObject['features'].map(function (feature) { return L.latLng(feature['geometry']['coordinates'].reverse()); })
+                }).addTo(map);
+            }
+            var length = geoJSONObject['features'].length;
             var mean = function (p1, p2) { return [p1[0] + p2[0], p1[1] + p2[1]]; };
             var center = geoJSONObject['features'].map(function (feature) { return feature['geometry']['coordinates'].reverse(); })
                 .reduce(mean).map(function (x) { return x / length; });
@@ -86,11 +95,14 @@ var BaselayersComponent = (function () {
     __decorate([
         core_1.Input('eventsURL')
     ], BaselayersComponent.prototype, "evtURL");
+    __decorate([
+        core_1.Input('eventsRouting')
+    ], BaselayersComponent.prototype, "evtRouting");
     BaselayersComponent = __decorate([
         core_1.Component({
             selector: 'base-layers-component',
             templateUrl: './baselayers.component.html',
-            providers: [geo_service_1.GeoService, script_service_1.Script]
+            providers: [geo_service_1.GeoService]
         })
     ], BaselayersComponent);
     return BaselayersComponent;

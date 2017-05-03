@@ -10,6 +10,7 @@ var AppComponent = (function () {
     function AppComponent() {
         this.title = 'Module for mapping!';
         this.url = "app/geo";
+        this.routing = true;
     }
     AppComponent.prototype.onLayerEvents = function (layer) {
         //do some stuff here...
