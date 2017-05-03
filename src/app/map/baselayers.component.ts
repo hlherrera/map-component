@@ -88,6 +88,14 @@ export class BaselayersComponent {
 
             if(this.evtRouting) {
                 L.Routing.control({
+                    createMarker: (i, wp) => {
+                        let marker = L.marker(wp.latLng);
+                        const feature = geoJSONObject['features'][i];
+                        if (feature.properties && feature['properties']['description']) {
+                            marker.bindPopup(feature['properties']['description']);
+                        }
+                        return marker;
+                    },
                     waypoints: geoJSONObject['features'].map(
                         feature => L.latLng(feature['geometry']['coordinates'].reverse())
                     )

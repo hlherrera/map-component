@@ -77,6 +77,14 @@ var BaselayersComponent = (function () {
             layer.addTo(map);
             if (_this.evtRouting) {
                 L.Routing.control({
+                    createMarker: function (i, wp) {
+                        var marker = L.marker(wp.latLng);
+                        var feature = geoJSONObject['features'][i];
+                        if (feature.properties && feature['properties']['description']) {
+                            marker.bindPopup(feature['properties']['description']);
+                        }
+                        return marker;
+                    },
                     waypoints: geoJSONObject['features'].map(function (feature) { return L.latLng(feature['geometry']['coordinates'].reverse()); })
                 }).addTo(map);
             }
