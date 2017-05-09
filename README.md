@@ -1,4 +1,5 @@
-# Demo
+# Map Leaflet component
+![Alt text](src/assets/mapping.png?raw=true "Angular 4 Leaflet Component")
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.0.2.
 
