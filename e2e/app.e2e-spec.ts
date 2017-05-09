@@ -1,10 +1,10 @@
-import { MapDemoPage } from './app.po';
+import { DemoPage } from './app.po';
 
-describe('map-demo App', function() {
-  let page: MapDemoPage;
+describe('demo App', () => {
+  let page: DemoPage;
 
   beforeEach(() => {
-    page = new MapDemoPage();
+    page = new DemoPage();
   });
 
   it('should display message saying app works', () => {

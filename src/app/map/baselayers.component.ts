@@ -83,7 +83,7 @@ export class BaselayersComponent {
                         layer.bindPopup(feature['properties']['description']);
                     }
                 }
-            });
+            }); 
             layer.addTo(map);
 
             if(this.evtRouting) {
